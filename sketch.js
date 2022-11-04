@@ -1,5 +1,7 @@
+// base unit = J / mol K
 let unitsDB = {
     'J': [[['kg', 'm', 'm'], ['s', 's']], 1.0],
+    'KJ': [[['kg', 'm', 'm'], ['s', 's']], 1000.],
     'CAL': [[['kg', 'm', 'm'], ['s', 's']], 4.184],
     'BTU': [[['kg', 'm', 'm'], ['s', 's']], 1055.05585262],
     'ERG': [[['kg', 'm', 'm'], ['s', 's']], 1.E-7],
@@ -8,18 +10,26 @@ let unitsDB = {
     'MM': [[['m'], []], 0.001],
     'IN': [[['m'], []], 0.0254],
     'FT': [[['m'], []], 0.3048],
+    'M2': [[['m', 'm'], []], 1.0],
+    'CM2': [[['m', 'm'], []], 0.01**2],
+    'MM2': [[['m', 'm'], []], 0.001**2],
+    'IN2': [[['m', 'm'], []], 0.0254**2],
+    'FT2': [[['m', 'm'], []], 0.3048**2],
     'M3': [[['m', 'm','m'], []], 1.0],
     'CM3': [[['m', 'm','m'], []], 0.01**3],
     'MM3': [[['m', 'm','m'], []], 0.001**3],
     'FT3': [[['m', 'm','m'], []], 0.3048**3],
     'IN3': [[['m', 'm','m'], []], 0.0254**3],
     'L': [[['m', 'm','m'], []], 0.001],
+    'ML': [[['m', 'm','m'], []], 0.000001],
     'ATM': [[['kg'], ['m', 's', 's']], 101325.],
     'PA': [[['kg'], ['m', 's', 's']], 1.0],
     'BAR': [[['kg'], ['m', 's', 's']], 100000.],
     'TORR': [[['kg'], ['m', 's', 's']], 133.3223684211],
     'PSI': [[['kg'], ['m', 's', 's']], 6894.7572931783],
+    'KPSI': [[['kg'], ['m', 's', 's']], 6894757.2931783],
     'INH2O': [[['kg'], ['m', 's', 's']], 249.08890833333],
+    'MMHG': [[['kg'], ['m', 's', 's']], 133.322387415],
     'MOL': [[['mol'], []], 1.0],
     'GMOL': [[['mol'], []], 1.0],
     'KMOL': [[['mol'], []], 1000.],
@@ -31,28 +41,37 @@ let unitsDB = {
 
 function setup() {
     // create canvas
-    createCanvas(400, 300);
+    var canvas = createCanvas(200, 0);
+    canvas.parent('canvasForHTML');
+    canvas.style('display', 'block')
     background(255);
     frameRate(5);
 
     noStroke();
     input = createInput('J / mol K');
-    input.position(20, 10, 'fixed');
+    //input.position(20, 10, 'fixed');
     input.size(200);
     input.style('text-size', 36);
     input.style('text-align', 'center');
 
     displayValue = createElement('h2', '8.31446261815324');
-    displayValue.position(20, 18);
+    //displayValue.position(20, 18);
 
     textAlign(CENTER);
 }
 
+let oldValue = '8.31446261815324';
 function draw() {
     const usrInput = input.value();
     let units = getUnits(usrInput);
     let newValue = calc(units);
-    displayValue.html(newValue);
+    if (oldValue == newValue){
+        // do nothing
+    }
+    else {
+        displayValue.html(newValue);
+    }
+    oldValue = newValue;
 }
 
 function calc(units) {
